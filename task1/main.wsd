@@ -1,0 +1,85 @@
+@startuml ClassDiagram
+
+abstract class User {
+  - id: int
+  - name: string
+  - email: string
+  - passwordHash: string
+  + login(credentials): bool
+  + logout(): void
+  + viewProfile(): Profile
+}
+
+class RegisteredUser {
+  - progress: List<UserProgress>
+  + practiceDialogue(dialogueId): void
+  + chooseDifficulty(level): void
+  + generateNewTask(): Task
+  + learnNewWords(): List<Word>
+}
+
+class Administrator {
+  + viewAllUsers(): List<User>
+  + manageUser(userId): void
+}
+
+class Guest {
+  + register(data): RegisteredUser
+}
+
+abstract class Task {
+  - id: int
+  - difficulty: string   {enum: EASY, MEDIUM, HARD}
+  - content: string
+  - answer: string
+  + checkAnswer(answer): bool
+}
+
+class DialogueTask {
+  - dialogueLines: List<string>
+}
+
+class WordTask {
+  - word: Word
+}
+
+class Word {
+  - id: int
+  - word: string
+  - translation: string
+  - examples: List<string>
+}
+
+class UserProgress {
+  - completedAt: datetime
+  - score: int
+}
+
+class Profile {
+  - userId: int
+  - name: string
+  - email: string
+  - registrationDate: datetime
+}
+
+' Наследование
+RegisteredUser <|-- User
+Administrator  <|-- User
+Guest          <|-- User
+
+DialogueTask   <|-- Task
+WordTask       <|-- Task
+
+' Композиция
+RegisteredUser *-- UserProgress : содержит
+WordTask       *-- Word         : содержит
+
+' Ассоциации
+UserProgress --> Task : относится к
+Administrator --> User : управляет
+
+' Зависимости (создание/использование)
+Guest         ..> RegisteredUser : создаёт
+RegisteredUser ..> Task           : генерирует
+User          ..> Profile         : возвращает
+@enduml
