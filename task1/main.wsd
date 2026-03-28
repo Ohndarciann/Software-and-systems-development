@@ -63,9 +63,9 @@ class Profile {
 }
 
 ' Наследование
-RegisteredUser <|-- User
-Administrator  <|-- User
-Guest          <|-- User
+User <|-- RegisteredUser 
+User <|-- Administrator
+User <|-- Guest
 
 DialogueTask   <|-- Task
 WordTask       <|-- Task
