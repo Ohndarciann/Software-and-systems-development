@@ -1,0 +1,41 @@
+@startuml Deployment Diagram
+skinparam componentStyle rectangle
+
+node "Клиентское устройство" {
+  [Браузер] as Browser
+  [JavaScript (React/Vue)] as Frontend
+}
+
+node "Сервер приложений" {
+  [Веб-сервер (Nginx)] as WebServer
+  [Python (Flask/Django)] as PythonApp
+  [Модуль pinyin] as Pinyin
+  [Модуль jieba] as Jieba
+  [API приложения] as API
+}
+
+node "Сервер базы данных" {
+  database "PostgreSQL" as DB
+}
+
+' Связи
+Browser --> WebServer : HTTPS
+Frontend --> WebServer : HTTPS (SPA)
+WebServer --> API : прокси
+API --> PythonApp : WSGI/ASGI
+PythonApp --> Pinyin
+PythonApp --> Jieba
+PythonApp --> DB : SQLAlchemy/psycopg2
+
+' Артефакты (развёртываемые единицы)
+artifact "frontend_bundle.js" as FrontendArtifact <<развёртывается>>
+artifact "app.py" as PythonArtifact <<развёртывается>>
+artifact "requirements.txt" as ReqsArtifact <<зависимости>>
+artifact "database_schema.sql" as DBSchemaArtifact <<развёртывается>>
+
+FrontendArtifact -[hidden] Frontend
+PythonArtifact -[hidden] PythonApp
+ReqsArtifact -[hidden] PythonApp
+DBSchemaArtifact -[hidden] DB
+
+@enduml
