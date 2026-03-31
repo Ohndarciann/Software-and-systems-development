@@ -1,0 +1,74 @@
+@startuml Components Diagram
+!include <C4/C4_Component>
+!include <C4/C4_Context>
+
+' Для простоты используем стандартные элементы UML
+skinparam componentStyle rectangle
+
+title Диаграмма компонентов системы изучения языка
+
+package "Клиентский слой" {
+  [Веб-интерфейс] as WebUI
+  [Мобильное приложение] as MobileUI
+}
+
+package "Серверный слой" {
+  
+  package "API Gateway" {
+    [REST API] as API
+  }
+  
+  package "Бизнес-логика" {
+    [Модуль аутентификации] as Auth
+    [Модуль пользователей] as Users
+    [Модуль заданий] as Tasks
+    [Модуль слов] as Words
+    [Модуль прогресса] as Progress
+  }
+  
+  package "Сервисы доступа к данным" {
+    [Репозиторий пользователей] as UserRepo
+    [Репозиторий заданий] as TaskRepo
+    [Репозиторий прогресса] as ProgressRepo
+    [Репозиторий слов] as WordRepo
+  }
+}
+
+package "Хранилища данных" {
+  database "База данных\n(PostgreSQL)" as DB
+}
+
+' Связи клиент-сервер
+WebUI --> API : HTTP
+MobileUI --> API : HTTP
+
+' API маршрутизирует к модулям
+API --> Auth
+API --> Users
+API --> Tasks
+API --> Words
+API --> Progress
+
+' Зависимости модулей бизнес-логики
+Auth --> UserRepo
+Users --> UserRepo
+Tasks --> TaskRepo
+Tasks --> Words
+Progress --> ProgressRepo
+Progress --> Tasks
+Words --> WordRepo
+
+' Репозитории обращаются к БД
+UserRepo --> DB
+TaskRepo --> DB
+ProgressRepo --> DB
+WordRepo --> DB
+
+' Компоненты для администратора
+Users ..> Auth : использует
+Users ..> UserRepo : использует
+
+' Дополнительные зависимости: генерация заданий
+Tasks ..> Words : получает слова
+Progress ..> Tasks : отслеживает задания
+@enduml

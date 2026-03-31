@@ -1,0 +1,25 @@
+@startuml Interaction Diagram
+title Диаграмма взаимодействия: Практика диалога
+
+actor User
+participant "RegisteredUser" as ru
+participant "DialogueTask" as dt
+participant "UserProgress" as up
+
+User -> ru : 1: chooseDifficulty(level)
+ru -> ru : 2: generateNewTask()
+ru -> dt : 3: new DialogueTask(difficulty)
+dt -> ru : 4: task
+User -> ru : 5: submitAnswer(answer)
+ru -> dt : 6: checkAnswer(answer)
+dt -> ru : 7: result
+
+note right of ru : Если ответ верный:
+ru -> up : 8: new UserProgress(task, score)
+ru -> up : 9: save()
+up -> ru : 10: ok
+ru -> User : 11: успех
+
+note right of ru : Если ответ неверный:
+ru -> User : 8: предложить повторить
+@enduml

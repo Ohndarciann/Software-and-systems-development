@@ -1,0 +1,36 @@
+@startuml Activity Diagram
+title Диаграмма активности: Практика диалога
+
+|Пользователь|
+start
+:Выбрать уровень сложности;
+:chooseDifficulty(level);
+
+|Система|
+:generateNewTask();
+:Создать DialogueTask;
+:Отобразить диалог;
+
+|Пользователь|
+:Ввести ответ;
+:submitAnswer();
+
+|Система|
+:checkAnswer(answer);
+if (Ответ верный?) then (да)
+  :Создать UserProgress;
+  :Записать результат (score, completedAt);
+  :Отобразить успех;
+  stop
+else (нет)
+  if (Есть попытки?) then (да)
+    |Пользователь|
+    :Повторить попытку;
+    -> :Ввести ответ;
+  else (нет)
+    |Система|
+    :Отобразить неверный ответ;
+    stop
+  endif
+endif
+@enduml

@@ -1,0 +1,23 @@
+@startuml State Diagram
+title Диаграмма состояний для Task
+
+[*] --> Created : generateNewTask()
+
+state Created {
+    [*] --> WaitingForStart
+}
+
+Created --> InProgress : startPractice()
+
+state InProgress {
+    [*] --> Solving
+}
+
+InProgress --> Checking : submitAnswer()
+
+Checking --> Completed : [answer correct]
+Checking --> Failed : [answer incorrect]
+
+Failed --> Created : retry() / generateNewTask()
+Completed --> [*] : finish()
+@enduml

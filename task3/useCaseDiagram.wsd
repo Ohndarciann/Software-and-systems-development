@@ -1,0 +1,54 @@
+@startuml Use Case Diagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Гость" as Guest
+actor "Зарегистрированный\nпользователь" as RegisteredUser
+actor "Администратор" as Administrator
+
+rectangle "Система изучения языка" {
+  
+  ' Общие use cases
+  usecase "Войти в систему" as Login
+  usecase "Выйти из системы" as Logout
+  usecase "Просмотреть профиль" as ViewProfile
+  
+  ' Use cases для гостя
+  usecase "Зарегистрироваться" as Register
+  
+  ' Use cases для зарегистрированного пользователя
+  usecase "Практиковать диалог" as PracticeDialogue
+  usecase "Выбрать сложность" as ChooseDifficulty
+  usecase "Сгенерировать задание" as GenerateTask
+  usecase "Изучить новые слова" as LearnNewWords
+  
+  ' Use cases для администратора
+  usecase "Просмотреть всех пользователей" as ViewAllUsers
+  usecase "Управлять пользователем" as ManageUser
+  
+  ' Связи актёров с use cases
+  Guest --> Register
+  Guest --> Login
+  Guest --> Logout
+  Guest --> ViewProfile
+  
+  RegisteredUser --> Login
+  RegisteredUser --> Logout
+  RegisteredUser --> ViewProfile
+  RegisteredUser --> PracticeDialogue
+  RegisteredUser --> ChooseDifficulty
+  RegisteredUser --> GenerateTask
+  RegisteredUser --> LearnNewWords
+  
+  Administrator --> Login
+  Administrator --> Logout
+  Administrator --> ViewProfile
+  Administrator --> ViewAllUsers
+  Administrator --> ManageUser
+  
+  ' Включения и расширения
+  ManageUser .> ViewAllUsers : <<include>>
+  PracticeDialogue .> GenerateTask : <<extend>>
+  LearnNewWords .> GenerateTask : <<extend>>
+}
+@enduml

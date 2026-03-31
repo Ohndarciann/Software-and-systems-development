@@ -1,0 +1,39 @@
+@startuml Sequence Diagram
+title Диаграмма последовательности: Практика диалога
+
+actor "RegisteredUser" as user
+participant ":RegisteredUser" as ru
+participant ":DialogueTask" as dt
+participant ":UserProgress" as up
+
+user -> ru: chooseDifficulty(level)
+activate ru
+
+ru -> ru: generateNewTask()
+create dt
+ru -> dt: new DialogueTask(difficulty)
+activate dt
+dt --> ru: task
+deactivate dt
+
+ru --> user: отобразить диалог
+
+user -> ru: submitAnswer(answer)
+ru -> dt: checkAnswer(answer)
+activate dt
+dt --> ru: result (bool)
+deactivate dt
+
+alt ответ верный
+    create up
+    ru -> up: new UserProgress(task, score)
+    activate up
+    ru -> up: save()
+    up --> ru: ok
+    deactivate up
+    ru --> user: успех
+else ответ неверный
+    ru --> user: предложить повторить
+end
+deactivate ru
+@enduml

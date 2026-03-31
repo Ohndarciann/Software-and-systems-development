@@ -1,0 +1,78 @@
+@startuml Object Diagram
+object guest1
+object user1
+object admin1
+object profile1
+object progress1
+object progress2
+object task1
+object task2
+object word1
+
+guest1 : Guest
+user1 : RegisteredUser
+admin1 : Administrator
+profile1 : Profile
+progress1 : UserProgress
+progress2 : UserProgress
+task1 : DialogueTask
+task2 : WordTask
+word1 : Word
+
+guest1 : id = null
+guest1 : name = "temp"
+guest1 : email = "temp@example.com"
+guest1 : passwordHash = null
+
+user1 : id = 101
+user1 : name = "Иван Петров"
+user1 : email = "ivan@example.com"
+user1 : passwordHash = "hash123"
+
+admin1 : id = 1
+admin1 : name = "Админ"
+admin1 : email = "admin@example.com"
+admin1 : passwordHash = "adminHash"
+
+profile1 : userId = 101
+profile1 : name = "Иван Петров"
+profile1 : email = "ivan@example.com"
+profile1 : registrationDate = "2025-01-15 10:30:00"
+
+progress1 : completedAt = "2025-03-20 14:25:00"
+progress1 : score = 85
+
+progress2 : completedAt = "2025-03-21 09:15:00"
+progress2 : score = 92
+
+task1 : id = 201
+task1 : difficulty = "MEDIUM"
+task1 : content = "Диалог в ресторане"
+task1 : answer = "Можно заказать столик?"
+task1 : dialogueLines = ["Waiter: Добрый вечер!", "Customer: Здравствуйте, столик на двоих"]
+
+task2 : id = 202
+task2 : difficulty = "EASY"
+task2 : content = "Переведите слово"
+task2 : answer = "приветствие"
+task2 : word = word1
+
+word1 : id = 301
+word1 : word = "greeting"
+word1 : translation = "приветствие"
+word1 : examples = ["Hello!", "Hi!"]
+
+user1 --* progress1
+user1 --* progress2
+
+progress1 -- task1
+progress2 -- task2
+
+task2 --* word1
+
+admin1 -- user1 : управляет
+
+guest1 ..> user1 : создаёт
+
+user1 ..> profile1 : возвращает
+@enduml
