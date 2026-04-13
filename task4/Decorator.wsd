@@ -1,0 +1,42 @@
+@startuml Decorator
+' Базовые классы
+abstract class Task {
+  - id: int
+  - difficulty: string
+  - content: string
+  - answer: string
+  - hint: string
+  + checkAnswer(answer: string): bool
+  + get_difficulty_stars(): string
+}
+
+class DialogueTask extends Task {
+  - dialogueLines: List<string>
+}
+
+class WordTask extends Task {
+  - word: Word
+}
+
+' Декоратор
+abstract class TaskDecorator extends Task {
+  - _task: Task
+  + TaskDecorator(task: Task)
+  + checkAnswer(answer: string): bool
+}
+
+class TimedTaskDecorator extends TaskDecorator {
+  - _start_time: datetime
+  - _time_limit: int
+  + start_timer(): void
+  + checkAnswer(answer: string): bool
+}
+
+class HintedTaskDecorator extends TaskDecorator {
+  - hint_text: string
+  + show_hint(): void
+}
+
+' Связи
+TaskDecorator o-- Task : wrapped >
+@enduml

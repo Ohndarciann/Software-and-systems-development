@@ -1,0 +1,44 @@
+@startuml Observer
+' Интерфейсы паттерна
+interface Observer {
+  + update(progress: UserProgress): void
+}
+
+interface Subject {
+  + attach(observer: Observer): void
+  + detach(observer: Observer): void
+  + notify(): void
+}
+
+' Конкретный субъект – прогресс пользователя
+class UserProgress implements Subject {
+  - _observers: List<Observer>
+  - completedAt: datetime
+  - score: int
+  - task: Task
+  - total_tasks_completed: int
+  - total_score: int
+  + attach(observer: Observer): void
+  + detach(observer: Observer): void
+  + notify(): void
+  + complete_task(task: Task, score: int): void
+}
+
+' Конкретные наблюдатели
+class AchievementManager implements Observer {
+  - achievements: List<string>
+  + update(progress: UserProgress): void
+}
+
+class AnalyticsService implements Observer {
+  + update(progress: UserProgress): void
+}
+
+class UINotifier implements Observer {
+  + update(progress: UserProgress): void
+}
+
+' Связи
+UserProgress "1" o-- "0..*" Observer : observers
+UserProgress --> Task : refers to >
+@enduml

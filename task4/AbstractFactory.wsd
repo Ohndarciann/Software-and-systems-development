@@ -1,0 +1,32 @@
+@startuml AbstractFactory
+' Интерфейс фабрики
+interface TaskFactory {
+  + create_dialogue_task(): DialogueTask
+  + create_word_task(): WordTask
+}
+
+' Конкретные фабрики
+class EasyTaskFactory implements TaskFactory {
+  + create_dialogue_task(): DialogueTask
+  + create_word_task(): WordTask
+}
+
+class HardTaskFactory implements TaskFactory {
+  + create_dialogue_task(): DialogueTask
+  + create_word_task(): WordTask
+}
+
+' Продукты
+class DialogueTask
+class WordTask
+class Word {
+  - word: string
+  - translation: string
+  - pinyin: string
+}
+
+' Связи
+TaskFactory ..> DialogueTask : creates >
+TaskFactory ..> WordTask : creates >
+WordTask *-- Word
+@enduml

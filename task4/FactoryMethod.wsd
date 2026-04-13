@@ -1,0 +1,44 @@
+@startuml FactoryMethod
+' Базовый класс пользователя
+abstract class User {
+  - id: int
+  - name: string
+  - email: string
+  + login(credentials): bool
+  + logout(): void
+  + viewProfile(): Profile
+}
+
+' Зарегистрированный пользователь с фабричным методом
+class RegisteredUser extends User {
+  - progress: UserProgress
+  - current_factory: TaskFactory
+  + generateNewTask(): Task
+  # _create_task(): Task
+  + practiceDialogue(): void
+  + chooseDifficulty(level): void
+}
+
+' Подклассы, переопределяющие фабричный метод
+class ChildUser extends RegisteredUser {
+  # _create_task(): Task
+}
+
+class AdvancedUser extends RegisteredUser {
+  # _create_task(): Task
+}
+
+' Продукт
+abstract class Task
+
+' Связи
+RegisteredUser ..> Task : returns >
+ChildUser ..> Task : creates specific >
+AdvancedUser ..> Task : creates specific >
+
+note right of RegisteredUser::_create_task
+  Фабричный метод.
+  Переопределяется в наследниках
+  для создания конкретных заданий.
+end note
+@enduml
